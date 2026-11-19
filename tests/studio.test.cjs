@@ -75,3 +75,5 @@ test('version history tile uses a bounded standalone icon, not the old gear symb
 test('history feature uses distinctive recovery styling and stays independent of legacy gear',()=>{const tile=html.match(/<div class="feature feature-history"[\s\S]*?<strong>Version History<\/strong><\/div>/);assert.ok(tile);assert.doesNotMatch(tile[0],/href="#gear"/);assert.match(html,/\.feature-history::after\{content:"RECOVER"/);assert.match(html,/\.feature-history \.feature-icon svg\{[^}]*width:26px!important/);});
 
 test('background styling and reset controls are wired into the visual inspector',()=>{assert.match(html,/id="inspector-background"/);assert.match(html,/id="inspector-reset"/);assert.match(scripts[13],/backgroundChanged/);assert.match(scripts[13],/initialBackground/);assert.match(scripts[13],/inspector-reset'\)\.addEventListener/);});
+
+test('visual inspector provides bounded previous next element navigation',()=>{assert.match(html,/id="inspector-prev"/);assert.match(html,/id="inspector-next"/);assert.match(html,/id="inspector-count"/);assert.match(scripts[13],/previous\.addEventListener\('click'/);assert.match(scripts[13],/next\.addEventListener\('click'/);});
