@@ -36,6 +36,7 @@ jobs:
           cp -R assets _site/assets
           touch _site/.nojekyll
           test -s _site/index.html
+          grep -q 'id="inspector-undo"' _site/index.html
           test -s _site/assets/logo.svg
           grep -q 'data-feature="version-history"' _site/index.html
           grep -q 'id="inspector-next"' _site/index.html
@@ -51,7 +52,7 @@ jobs:
         run: |
           set -euo pipefail
           for attempt in $(seq 1 12); do
-            if curl --fail --silent --show-error --location --max-time 15 --header 'Cache-Control: no-cache' "${PAGE_URL}?revision=${GITHUB_SHA}" -o /tmp/crowdcode-live.html && grep -q 'data-feature="version-history"' /tmp/crowdcode-live.html && grep -q 'viewBox="0 0 48 48"' /tmp/crowdcode-live.html && grep -q 'id="inspector-next"' /tmp/crowdcode-live.html; then
+            if curl --fail --silent --show-error --location --max-time 15 --header 'Cache-Control: no-cache' "${PAGE_URL}?revision=${GITHUB_SHA}" -o /tmp/crowdcode-live.html && grep -q 'data-feature="version-history"' /tmp/crowdcode-live.html && grep -q 'viewBox="0 0 48 48"' /tmp/crowdcode-live.html && grep -q 'id="inspector-next"' /tmp/crowdcode-live.html && grep -q 'id="inspector-undo"' /tmp/crowdcode-live.html; then
               echo "Live site verified at ${PAGE_URL}"
               exit 0
             fi
