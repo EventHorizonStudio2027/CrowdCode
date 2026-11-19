@@ -31,8 +31,25 @@ jobs:
           touch _site/.nojekyll
           test -s _site/index.html
           test -s _site/assets/logo.svg
+          grep -q 'data-feature="version-history"' _site/index.html
+          ! grep -q 'href="#gear".*Version History' _site/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify published HTML matches new history icon
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 12); do
+            if curl --fail --silent --show-error --location --max-time 15 --header 'Cache-Control: no-cache' "${PAGE_URL}?revision=${GITHUB_SHA}" -o /tmp/crowdcode-live.html && grep -q 'data-feature="version-history"' /tmp/crowdcode-live.html && grep -q 'viewBox="0 0 48 48"' /tmp/crowdcode-live.html; then
+              echo "Live site verified at ${PAGE_URL}"
+              exit 0
+            fi
+            echo "Published content not current (attempt ${attempt}/12)"
+            sleep 10
+          done
+          echo 'Live page did not match the deployed version.' >&2
+          exit 1
