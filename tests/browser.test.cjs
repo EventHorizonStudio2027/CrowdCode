@@ -30,6 +30,14 @@ test('browser studio workflow: editor, snippets, project recovery and viewport',
       const image = page.locator('img[src="' + path + '"]').first();
       assert.equal(await image.evaluate(el => el.complete && el.naturalWidth > 0), true, path + ' loads as a real image');
     }
+    const historyIcon = page.locator('.feature-history .feature-icon svg');
+    const historyBox = await historyIcon.boundingBox();
+    const historyContainer = await page.locator('.feature-history .feature-icon').boundingBox();
+    assert.ok(historyBox && historyContainer, 'history icon and container render');
+    assert.ok(historyBox.width <= 28 && historyBox.height <= 28, 'history icon remains compact');
+    assert.ok(historyBox.x >= historyContainer.x && historyBox.y >= historyContainer.y, 'history icon fits within container start');
+    assert.ok(historyBox.x + historyBox.width <= historyContainer.x + historyContainer.width + 1, 'history icon fits container width');
+    assert.ok(historyBox.y + historyBox.height <= historyContainer.y + historyContainer.height + 1, 'history icon fits container height');
     await page.keyboard.press('Control+k');
     assert.equal(await page.locator('#command-dialog').isVisible(), true, 'command palette opens');
     await page.locator('#command-search').fill('Open studio');
