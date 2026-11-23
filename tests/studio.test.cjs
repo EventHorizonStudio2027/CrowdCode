@@ -235,3 +235,9 @@ test('library import confirms the editor draft remains unchanged',()=>{
  assert.match(html,/Your editor draft was not changed/);
  assert.match(html,/id="crowd-save-status-refinement"/);
 });
+
+test('slash shortcut focuses project search without stealing typing',()=>{
+ assert.match(html,/event\.key==='\/'&&!event\.ctrlKey&&!event\.metaKey/);
+ assert.match(html,/event\.target\.closest\('input,textarea,select,\[contenteditable\]'\)/);
+ assert.match(html,/event\.preventDefault\(\);filter\.focus\(\)/);
+});
