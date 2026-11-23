@@ -58,7 +58,8 @@ jobs:
           grep -q 'id="project-save"' _site/index.html
           echo 'Root index.html and primary studio controls are present in the deployment artifact.'
           grep -q 'id="inspector-undo"' _site/index.html
-          test -s _site/assets/logo.svg
+          test -s _site/assets/branding/crowdcode-app-icon.png
+          test -s _site/assets/branding/crowdcode-wordmark.png
           grep -q 'data-feature="version-history"' _site/index.html
           grep -q 'id="inspector-next"' _site/index.html
           ! grep -q 'href="#gear".*Version History' _site/index.html

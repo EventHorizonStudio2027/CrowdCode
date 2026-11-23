@@ -55,7 +55,7 @@ test('project library JSON backup round trip and cancelled restore', async ({ pa
   const backupPath = await download.path();
   page.once('dialog', dialog => dialog.accept());
   await page.locator('#project-import').setInputFiles(backupPath);
-  await expect(page.locator('#project-status')).toContainText('imported successfully', { timeout: 10000 });
+  await expect(page.locator('#project-status')).toContainText('Imported 1 projects into this browser', { timeout: 10000 });
   await page.locator('[data-view="studio"]').first().click();
   await page.locator('#source').fill('<h1>Do not replace</h1>');
   await page.locator('[data-view="projects"]').first().click();
@@ -97,4 +97,13 @@ test('invalid imported project records do not replace library', async ({ page })
   });
   await expect(page.locator('#project-status')).toContainText('Backup rejected');
   await expect(page.locator('#project-list')).toContainText('Original');
+});
+
+test('Quick Notes starter updates the character count in preview', async ({ page }) => {
+  await page.goto('/');
+  const preview = page.frameLocator('#preview');
+  await preview.locator('#note').fill('My notes');
+  await expect(preview.locator('#note-count')).toHaveText('8 characters');
+  await expect(preview.getByRole('button', { name: 'Download notes' })).toBeDisabled();
+  await expect(preview.locator('#download-help')).toBeVisible();
 });
