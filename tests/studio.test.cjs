@@ -226,3 +226,12 @@ test('library search clears with Escape and restores the full list',()=>{
  assert.match(html,/event\.key==='Escape'&&filter\.value/);
  assert.match(html,/filter\.value='';apply\(\)/);
 });
+
+test('restore reports autosave failure instead of claiming success',()=>{
+ assert.match(html,/const saved=flushDraft\(\);status\.textContent=saved\?/);
+ assert.match(html,/browser storage failed\. Export your work before leaving/);
+});
+test('library import confirms the editor draft remains unchanged',()=>{
+ assert.match(html,/Your editor draft was not changed/);
+ assert.match(html,/id="crowd-save-status-refinement"/);
+});
