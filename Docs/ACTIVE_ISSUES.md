@@ -15,3 +15,10 @@ Completed implementation is recorded in Git history and the completed-work secti
 - CI test execution is **not yet verified**; adding tests does not prove they pass.
 - Separate final UI polish is committed after this document.
 
+
+## Latest batch — additional interaction coverage (2026-11-23)
+- Added automated project-library JSON backup round-trip, cancelled restore and invalid import preservation tests.
+- Strengthened imported project validation to reject blank names and empty identifiers.
+- Refined project-library action spacing and keyboard focus styling.
+- **Not verified:** GitHub Actions run status and actual browser test results; failing tests must be repaired before marking the browser issue complete.
+- Final independent visual polish follows this documentation commit.
