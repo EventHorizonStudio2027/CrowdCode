@@ -16,7 +16,7 @@ permissions:
   id-token: write
 concurrency:
   group: crowdcode-pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   deploy:
     environment:
@@ -68,18 +68,25 @@ jobs:
           path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
-      - name: Verify published HTML matches new history icon
+      - name: Verify deployed page and branding match this revision
         env:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
         run: |
           set -euo pipefail
+          base_url="${PAGE_URL%/}"
+          matches_release() {
+            local path="$1"
+            curl --fail --silent --show-error --location --max-time 15 \
+              --header 'Cache-Control: no-cache' "${base_url}/${path}?revision=${GITHUB_SHA}" \
+              -o /tmp/pages-verification && cmp -s "_site/${path}" /tmp/pages-verification
+          }
           for attempt in $(seq 1 12); do
-            if curl --fail --silent --show-error --location --max-time 15 --header 'Cache-Control: no-cache' "${PAGE_URL}?revision=${GITHUB_SHA}" -o /tmp/crowdcode-live.html && grep -q 'data-feature="version-history"' /tmp/crowdcode-live.html && grep -q 'viewBox="0 0 48 48"' /tmp/crowdcode-live.html && grep -q 'id="inspector-next"' /tmp/crowdcode-live.html && grep -q 'id="inspector-undo"' /tmp/crowdcode-live.html; then
-              echo "Live site verified at ${PAGE_URL}"
+            if matches_release index.html && matches_release assets/branding/crowdcode-app-icon.png && matches_release assets/branding/crowdcode-wordmark.png; then
+              echo "Live site and branding verified at ${PAGE_URL}"
               exit 0
             fi
-            echo "Published content not current (attempt ${attempt}/12)"
+            echo "Waiting for the published revision (attempt ${attempt}/12)"
             sleep 10
           done
-          echo 'Live page did not match the deployed version.' >&2
+          echo 'The published page or artwork did not match the deployed revision.' >&2
           exit 1
