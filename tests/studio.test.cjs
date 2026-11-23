@@ -205,5 +205,7 @@ test('project status exposes a single accessible live region',()=>{
 });
 
 test('project library exports attach a link and keep its blob URL alive for download handoff',()=>{
- assert.match(html,/function download\(text,file,type\)/);\n assert.match(html,/document\.body\.appendChild\(a\);a\.click\(\);a\.remove\(\);setTimeout\(\(\)=>URL\.revokeObjectURL\(url\),60000\)/);
+ assert.match(html,/function download\(text,file,type\)/);
+ assert.match(html,/document\.body\.appendChild\(a\);a\.click\(\);a\.remove\(\)/);
+ assert.match(html,/setTimeout\(\(\)=>URL\.revokeObjectURL\(url\),60000\)/);
 });
