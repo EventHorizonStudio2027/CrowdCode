@@ -22,3 +22,10 @@ Completed implementation is recorded in Git history and the completed-work secti
 - Refined project-library action spacing and keyboard focus styling.
 - **Not verified:** GitHub Actions run status and actual browser test results; failing tests must be repaired before marking the browser issue complete.
 - Final independent visual polish follows this documentation commit.
+
+## Current interaction hardening — 2026-11-23
+- Added browser assertions for preview iframe sandbox and denied local storage access.
+- Added blank-name import rejection regression coverage.
+- Invalid import feedback now explicitly confirms existing projects are preserved.
+- Improved import status and project-count presentation.
+- CI test run results remain unverified, so issue #1 stays open.
